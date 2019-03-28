@@ -4,17 +4,6 @@
 #################################################
 # file to edit: dev_nb/yadl.ipynb
 
-from exp.nb_01 import *
-
-def get_data():
-    path = datasets.download_data(MNIST_URL, ext='.gz')
-    with gzip.open(path, 'rb') as f:
-        ((x_train, y_train), (x_valid, y_valid), _) = pickle.load(f, encoding='latin-1')
-    return map(tensor, (x_train,y_train,x_valid,y_valid))
-
-def normalize(x, mean, std):
-    return (x - mean)/std
-
 
 from torch import nn
 class LinearModel():
@@ -88,14 +77,3 @@ class Sequential():
         for model in self.models:
             if hasattr(model, "wt"):
                 model.wt = model.wt - (self.lr * model.wt.grad)
-
-
-if __name__ == "__main__":
-    seq = Sequential(lr=lr, layers=[784, 50])
-    for i in range(100):
-        loss = seq(x_train, y_train)
-        if i % 10 == 0:
-            print("loss ", loss)
-
-        seq.backward()
-        seq.update()
